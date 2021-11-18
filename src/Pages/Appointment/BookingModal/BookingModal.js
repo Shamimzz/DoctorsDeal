@@ -20,13 +20,15 @@ const style = {
     p: 4,
 };
 
-const BookingModal = ({ openBooking, handleBookingClose, booking, date, setBookingSuccess }) => {
+const BookingModal = ({ openBooking, handleBookingClose, booking, price, date, setBookingSuccess }) => {
     const { name, time } = booking;
     const { user } = useAuth();
-    const initialInfo = { patientName: user.displayName, email: user.email, phone: '' }
+    const initialInfo = { patientName: user.displayName, email: user.email, price, phone: '' }
+    console.log(price)
+    
     const [bookingInfo, setBookingInfo] = useState(initialInfo);
 
-    const handleOnBlur = e => {
+    const handleOnBlur = e => {     
         const field = e.target.name;
         const value = e.target.value;
         const newInfo = { ...bookingInfo };

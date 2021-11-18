@@ -1,9 +1,8 @@
 import './App.css';
 import {
   BrowserRouter as Router,
-  Switch,
+  Routes,
   Route,
-  Link
 } from "react-router-dom";
 import Home from './Pages/Home/Home/Home';
 import Appointment from './Pages/Appointment/Appointment/Appointment';
@@ -12,35 +11,51 @@ import Register from './Pages/Login/Register/Register';
 import AuthProvider from './contexts/AuthProvider/AuthProvider';
 import PrivateRoute from './Pages/Login/PrivateRoute/PrivateRoute';
 import Dashboard from './Pages/Dashboard/Dashboard/Dashboard';
+import DashboardHome from './Pages/Dashboard/DashboardHome/DashboardHome';
+import AdminRoute from './Pages/Login/AdminRoute/AdminRoute';
+import Payment from './Pages/Dashboard/Payment/Payment';
+import MakeAdmin from './Pages/Dashboard/MakeAdmin/MakeAdmin';
+import AddDoctor from './Pages/Dashboard/AddDoctor/AddDoctor';
 
-function App() {
+const App = props => {
   return (
     <div className="App">
-      <AuthProvider>
-        <Router>
-          <Switch>
-            <PrivateRoute path="/appointment">
-              <Appointment />
-            </PrivateRoute>
-            <PrivateRoute path="/dashboard">
-              <Dashboard />
-            </PrivateRoute>
-            <Route path="/home">
-              <Home />
+    <AuthProvider>
+      <Router>
+        <Routes>
+          <Route path="/appointment" element={<PrivateRoute>
+            <Appointment />
+          </PrivateRoute>}>
+          </Route>
+          <Route path="/dashboard" element={<PrivateRoute>
+            <Dashboard />
+          </PrivateRoute>}>
+            <Route  path="/dashboard" element={<DashboardHome></DashboardHome>}>
             </Route>
-            <Route path="/login">
-              <Login />
+            <Route path={`/dashboard/payment/:appointmentId`} element={<Payment></Payment>}>
+
             </Route>
-            <Route path="/register">
-              <Register />
+            <Route path={`/dashboard/makeAdmin`} element={<AdminRoute>
+              <MakeAdmin></MakeAdmin>
+            </AdminRoute>}>
             </Route>
-            <Route exact path="/">
-              <Home />
+            <Route path={`/dashboard/addDoctor`} element={<AdminRoute>
+              <AddDoctor></AddDoctor>
+            </AdminRoute>}>
             </Route>
-          </Switch>
-        </Router>
-      </AuthProvider>
-    </div>
+          </Route>
+          <Route path="/home" element={<Home />}>
+          </Route>
+          <Route path="/login" element={<Login />}>
+          </Route>
+          <Route path="/register" element={<Register />}>
+          </Route>
+          <Route exact path="/" element={<Home />}>
+          </Route>
+        </Routes>
+      </Router>
+    </AuthProvider>
+  </div>
   );
 }
 

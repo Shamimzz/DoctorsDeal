@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -15,18 +15,18 @@ import MailIcon from '@mui/icons-material/Mail';
 import MenuIcon from '@mui/icons-material/Menu';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import Grid from '@mui/material/Grid';
-import Calendar from '../../Shared/Calendar/Calendar';
-import Appointments from '../Appointments/Appointments';
 import { Button } from '@mui/material';
-import { Link } from 'react-router-dom';
+import useAuth from '../../../hooks/useAuth'
+import { Link, Outlet} from "react-router-dom";
 
 const drawerWidth = 200;
 
 function Dashboard(props) {
     const { window } = props;
     const [mobileOpen, setMobileOpen] = React.useState(false);
-    const [date, setDate] = React.useState(new Date())
+
+    const {admin} = useAuth(); // admin
+    console.log(admin);
 
     const handleDrawerToggle = () => {
         setMobileOpen(!mobileOpen);
@@ -37,6 +37,13 @@ function Dashboard(props) {
             <Toolbar />
             <Divider />
             <Link to="/appointment"><Button color="inherit">Appointment</Button></Link>
+            <Link to="/dashboard"><Button color="inherit">DashBoard</Button></Link>
+            {admin && 
+              <Box>
+                <Link to={`/dashboard/makeAdmin`} ><Button color="inherit">Make Admin</Button></Link>
+                <Link to={`/dashboard/addDoctor`}><Button color="inherit">Add Doctor</Button></Link>
+             </Box>           
+            }
             <List>
                 {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
                     <ListItem button key={text}>
@@ -95,7 +102,7 @@ function Dashboard(props) {
                         '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
                     }}
                 >
-                    {drawer}
+                  {drawer}
                 </Drawer>
                 <Drawer
                     variant="permanent"
@@ -113,29 +120,16 @@ function Dashboard(props) {
                 sx={{ flexGrow: 1, p: 3, width: { sm: `calc(100% - ${drawerWidth}px)` } }}
             >
                 <Toolbar />
-                <Typography paragraph>
-                    <Grid container spacing={2}>
-                        <Grid item xs={12} sm={5}>
-                            <Calendar
-                                date={date}
-                                setDate={setDate}
-                            ></Calendar>
-                        </Grid>
-                        <Grid item xs={12} sm={7}>
-                            <Appointments date={date}></Appointments>
-                        </Grid>
-                    </Grid>
-                </Typography>
+
+              {/* react router Outlet for nestend routes */}
+               <Outlet></Outlet> 
+
             </Box>
         </Box>
     );
 }
 
 Dashboard.propTypes = {
-    /**
-     * Injected by the documentation to work in an iframe.
-     * You won't need it on your project.
-     */
     window: PropTypes.func,
 };
 
